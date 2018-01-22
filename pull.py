@@ -1,8 +1,6 @@
 #!/usr/local/bin/python3.6
 
 import os
-import subprocess
-import re
 import csv
 from git import Repo
 
