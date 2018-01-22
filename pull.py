@@ -29,3 +29,6 @@ with open(IMPORT_FILE, newline='') as infile:
         git = repo.git
         git.checkout(branch_name)
 
+        # Switch back to main directory
+        os.chdir("..")
+
