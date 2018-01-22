@@ -29,6 +29,11 @@ with open(IMPORT_FILE, newline='') as infile:
         git = repo.git
         git.checkout(branch_name)
 
+        # Check branch
+        branch = repo.active_branch
+        if (branch.name != branch_name):
+            print("Incorrect Branch: " + row["firstname"] + " " + row["lastname"])
+
         # Switch back to main directory
         os.chdir("..")
 
