@@ -23,5 +23,5 @@ A project to help automate the TA grading of Oregon State University's CS 362 co
 		- `-i`: input file (defaults to `usernames.csv`)
 - `./build.py`: builds the dominion in both `projects/` and main `dominion/` directories
 
-### Feedback:
+## Feedback:
 Please provide feedback by creating an issue above. If you would like to implement a fix then don't hesitate to make a pull request! Happy coding!
