@@ -1,4 +1,4 @@
-# Pull
+# Apollo
 A project to help automate the TA grading of Oregon State University's CS 362 course.
 
 ## Requirements:
