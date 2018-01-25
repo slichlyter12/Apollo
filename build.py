@@ -4,8 +4,10 @@ import os
 import subprocess
 import csv
 
+
 IMPORT_FILE = 'usernames.csv'
 FIELDNAMES = ['firstname', 'lastname', 'gid', 'osuid', 'url']
+
 
 class bcolors:
     HEADER = '\033[95m'
@@ -18,44 +20,64 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-with open(IMPORT_FILE, newline='') as infile:
-    reader = csv.DictReader(infile, fieldnames=FIELDNAMES)
-    next(reader) # Skip over header
-    for row in reader:
+def build(dir, failed):
+    try:
+        # Move to directory
+        os.chdir(dir)
 
-        failed_project = False
-        failed_base = False
+        # Modify Makefile to suppress warnings
+        with open("Makefile", "r+") as makefile:
+            flags = makefile.readline()
+            flags = flags[:-1] + " -w\n\n"
+            makefile.seek(0, 0)
+            makefile.write(flags)
 
-        # Build osuid/project/osuid/dominion
-        dir = row['osuid'] + "/projects/" + row['osuid'] + "/dominion"
-        try:
-            os.chdir(dir)
-            subprocess.run(["make", "all"])
-            print(bcolors.OKGREEN + "Built: " + dir + bcolors.ENDC)
-            subprocess.run(["make", "clean"])
-            print(bcolors.OKGREEN + "Cleaned: " + dir + bcolors.ENDC)
-            print("\n\n\n")
-            os.chdir("../../../..")
-        except:
-            failed_project = True
-            print(bcolors.WARNING + "WARNING: Could not build: " + dir + bcolors.ENDC)
+        # Make and clean
+        subprocess.run(["make", "all", "-s"])
+        print(bcolors.OKGREEN + "Built: " + dir + bcolors.ENDC)
+        subprocess.run(["make", "clean", "-s"])
+        # print(bcolors.OKGREEN + "Cleaned: " + dir + bcolors.ENDC)
 
-        # Build and clean to check for compilation errors
-        dir = row['osuid'] + "/dominion/"
-        try:
-            os.chdir(dir)
-            subprocess.run(["make", "all"])
-            print(bcolors.OKGREEN + "Built: " + dir + bcolors.ENDC)
-            subprocess.run(["make", "clean"])
-            print(bcolors.OKGREEN + "Cleaned: " + dir + bcolors.ENDC)
-            print("\n\n\n")
-            os.chdir("../../")
-        except:
-            failed_base = True
-            print(bcolors.WARNING + "WARNING: Could not build: " + dir + bcolors.ENDC)
+        # Change Makefile back to original
+        subprocess.run(["git", "checkout", "Makefile"])
 
-        # Print what failed
-        if failed_project:
-            print(bcolors.FAIL + "Failed Project Build" + bcolors.ENDC)
-        if failed_base:
-            print(bcolors.FAIL + "Failed Base Build" + bcolors.ENDC)
+        # Get out of there
+        depth = dir.count('/')
+        path = ""
+        for _ in range(depth):
+            path += "../"
+        os.chdir(path)
+
+    except:
+        failed = True
+        print(bcolors.WARNING + "WARNING: Could not build: " + dir + bcolors.ENDC)
+
+    return failed
+
+
+def main():
+    with open(IMPORT_FILE, newline='') as infile:
+        reader = csv.DictReader(infile, fieldnames=FIELDNAMES)
+        next(reader) # Skip over header
+        for row in reader:
+
+            failed_project = False
+            failed_base = False
+
+            # Build osuid/project/osuid/dominion
+            dir = row['osuid'] + "/projects/" + row['osuid'] + "/dominion/"
+            failed_project = build(dir, failed_project)
+
+            # Build and clean to check for compilation errors
+            dir = row['osuid'] + "/dominion/"
+            failed_base = build(dir, failed_base)
+
+            # Print what failed
+            if failed_project:
+                print(bcolors.FAIL + "Failed Project Build: " + row['osuid'] + bcolors.ENDC)
+            if failed_base:
+                print(bcolors.FAIL + "Failed Base Build: " + row['osuid'] + bcolors.ENDC)
+
+
+if __name__ == "__main__":
+    main()
