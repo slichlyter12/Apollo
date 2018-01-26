@@ -1,6 +1,7 @@
 #!/usr/local/bin/python3.6
 
 import os
+from sys import argv
 import subprocess
 import csv
 
@@ -18,6 +19,16 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+
+
+# Credit: https://gist.github.com/dideler/2395703
+def getopts(args):
+    opts = {}
+    while args:
+        if args[0][0] == '-':
+            opts[args[0]] = args[1]
+        args = args[1:]
+    return opts
 
 
 def build(dir, failed):
@@ -80,4 +91,7 @@ def main():
 
 
 if __name__ == "__main__":
+    args = getopts(argv)
+    if 'i' in args:
+        IMPORT_FILE = args['-i']
     main()
