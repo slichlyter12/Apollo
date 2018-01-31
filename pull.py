@@ -53,7 +53,7 @@ def pull():
             git = repo.git
             try:
                 git.checkout(branch_name)
-                print("Pulling: " + branch_name + bcolors.ENDC)
+                print(bcolors.OKGREEN + "Pulling: " + branch_name + bcolors.ENDC)
             except:
                 print(bcolors.FAIL + "FAILED TO PULL: " + branch_name + bcolors.ENDC)
 
