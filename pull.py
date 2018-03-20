@@ -40,6 +40,7 @@ def pull():
             # Get repo and branch
             repo_name = row['url']
             branch_name = row['osuid'] + '-assignment-' + ASSIGNMENT_NUM
+            # branch_name = row['osuid'] + '-random-quiz'
 
             # Check if repo exists, if so pull, if not clone
             if not (os.path.exists(row['osuid'])):
@@ -52,6 +53,7 @@ def pull():
             repo = Repo()
             git = repo.git
             try:
+                git.pull()
                 git.checkout(branch_name)
                 print(bcolors.OKGREEN + "Pulling: " + branch_name + bcolors.ENDC)
             except:
