@@ -31,7 +31,8 @@ def getopts(args):
     return opts
 
 
-def build(dir, failed):
+def build(dir, clean):
+    failed = False
     try:
         # Move to directory
         os.chdir(dir)
@@ -46,8 +47,9 @@ def build(dir, failed):
         # Make and clean
         subprocess.run(["make", "all", "-s"])
         print(bcolors.OKGREEN + "Built: " + dir + bcolors.ENDC)
-        subprocess.run(["make", "clean", "-s"])
-        # print(bcolors.OKGREEN + "Cleaned: " + dir + bcolors.ENDC)
+        if clean:
+            subprocess.run(["make", "clean", "-s"])
+            # print(bcolors.OKGREEN + "Cleaned: " + dir + bcolors.ENDC)
 
         # Change Makefile back to original
         subprocess.run(["git", "checkout", "Makefile"])
@@ -72,16 +74,13 @@ def main():
         next(reader) # Skip over header
         for row in reader:
 
-            failed_project = False
-            failed_base = False
-
             # Build osuid/project/osuid/dominion
             dir = row['osuid'] + "/projects/" + row['osuid'] + "/dominion/"
-            failed_project = build(dir, failed_project)
+            failed_project = build(dir, True)
 
             # Build and clean to check for compilation errors
             dir = row['osuid'] + "/dominion/"
-            failed_base = build(dir, failed_base)
+            failed_base = build(dir, True)
 
             # Print what failed
             if failed_project:
