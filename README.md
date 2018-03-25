@@ -29,7 +29,7 @@ A project to help automate the TA grading of Oregon State University's CS 362 co
 - `./test.py`: builds and runs random testers 
 	- **Note:** Students tend to not name their make commands the same, so this often fails
 	- Optional command line arguments:
-	- `-i`: input file (defaults to `usernames.csv`)
+		- `-i`: input file (defaults to `usernames.csv`)
 
 ## Feedback:
 Please provide feedback by creating an issue above. If you would like to implement a fix then don't hesitate to make a pull request! Happy coding!
