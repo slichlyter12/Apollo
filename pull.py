@@ -8,6 +8,7 @@ from git import Repo
 IMPORT_FILE = 'usernames.csv'
 FIELDNAMES = ['firstname', 'lastname', 'gid', 'osuid', 'url']
 ASSIGNMENT_NUM = '1'
+BRANCH_NAME = ''
 
 
 class bcolors:
@@ -39,8 +40,14 @@ def pull():
 
             # Get repo and branch
             repo_name = row['url']
-            branch_name = row['osuid'] + '-assignment-' + ASSIGNMENT_NUM
-            # branch_name = row['osuid'] + '-random-quiz'
+
+            # Get branch name
+            if BRANCH_NAME == "":
+               branch_name = row['osuid'] + '-assignment-' + ASSIGNMENT_NUM
+            elif BRANCH_NAME == "master":
+                branch_name = BRANCH_NAME
+            else:
+                branch_name = row['osuid'] + '-' + BRANCH_NAME
 
             # Check if repo exists, if so pull, if not clone
             if not (os.path.exists(row['osuid'])):
@@ -74,4 +81,6 @@ if __name__ == "__main__":
         ASSIGNMENT_NUM = args['-a']
     if '-i' in args:
         IMPORT_FILE = args['-i']
+    if '-b' in args:
+        BRANCH_NAME = args['-b']
     pull()
