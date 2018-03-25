@@ -21,7 +21,7 @@ A project to help automate the TA grading of Oregon State University's CS 362 co
 	- Optional command line arguments:
 		- `-a`: assignment number (defaults to `1`)
 		- `-i`: input file (defaults to `usernames.csv`)
-		- `-b`: branch name (defaults to empty)
+		- `-b`: branch name (defaults to `onid-assignment-1`)
 - `./build.py`: builds the dominion in both `projects/` and main `dominion/` directories
 	- Build errors show up **above** username
 	- Option command line arguments:
